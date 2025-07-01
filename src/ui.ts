@@ -24,7 +24,7 @@ const html = `<!DOCTYPE html>
 			<button class="btn primary" id="newSessionBtn" onclick="newSession()" style="display: none;">New Chat</button>
 		</div>
 	</div>
-	
+
 	<div id="conversationHistory" class="conversation-history" style="display: none;">
 		<div class="conversation-header">
 			<h3>Conversation History</h3>
@@ -37,7 +37,7 @@ const html = `<!DOCTYPE html>
 
 	<div class="chat-container" id="chatContainer">
 		<div class="messages" id="messages"></div>
-		
+
 		<!-- WSL Alert for Windows users -->
 		<div id="wslAlert" class="wsl-alert" style="display: none;">
 			<div class="wsl-alert-content">
@@ -52,7 +52,7 @@ const html = `<!DOCTYPE html>
 				</div>
 			</div>
 		</div>
-		
+
 		<div class="input-container" id="inputContainer">
 			<div class="input-modes">
 				<div class="mode-toggle">
@@ -119,7 +119,7 @@ const html = `<!DOCTYPE html>
 			</div>
 		</div>
 	</div>
-	
+
 	<div class="status ready" id="status">
 		<div class="status-indicator"></div>
 		<div class="status-text" id="statusText">Initializing...</div>
@@ -223,13 +223,13 @@ const html = `<!DOCTYPE html>
 						<input type="checkbox" id="wsl-enabled" onchange="updateSettings()">
 						<label for="wsl-enabled">Enable WSL Integration</label>
 					</div>
-					
+
 					<div id="wslOptions" style="margin-left: 24px; margin-top: 12px;">
 						<div style="margin-bottom: 12px;">
 							<label style="display: block; margin-bottom: 4px; font-size: 12px; color: var(--vscode-descriptionForeground);">WSL Distribution</label>
 							<input type="text" id="wsl-distro" class="file-search-input" style="width: 100%;" placeholder="Ubuntu" onchange="updateSettings()">
 						</div>
-						
+
 						<div style="margin-bottom: 12px;">
 							<label style="display: block; margin-bottom: 4px; font-size: 12px; color: var(--vscode-descriptionForeground);">Node.js Path in WSL</label>
 							<input type="text" id="wsl-node-path" class="file-search-input" style="width: 100%;" placeholder="/usr/bin/node" onchange="updateSettings()">
@@ -237,7 +237,7 @@ const html = `<!DOCTYPE html>
 								Find your node installation path in WSL by running: <code style="background: var(--vscode-textCodeBlock-background); padding: 2px 4px; border-radius: 3px;">which node</code>
 							</p>
 						</div>
-						
+
 						<div style="margin-bottom: 12px;">
 							<label style="display: block; margin-bottom: 4px; font-size: 12px; color: var(--vscode-descriptionForeground);">Claude Path in WSL</label>
 							<input type="text" id="wsl-claude-path" class="file-search-input" style="width: 100%;" placeholder="/usr/local/bin/claude" onchange="updateSettings()">
@@ -273,7 +273,7 @@ const html = `<!DOCTYPE html>
 						<label for="custom-commands-enabled">Enable Custom Commands <span style="font-style: italic; opacity: 0.7;">(Coming Soon)</span></label>
 					</div>
 				</div>
-				
+
 			</div>
 		</div>
 	</div>
@@ -503,10 +503,10 @@ const html = `<!DOCTYPE html>
 						<div class="slash-command-description">
 							<div class="custom-command-input-container">
 								<span class="command-prefix">/</span>
-								<input type="text" 
-									   class="custom-command-input" 
+								<input type="text"
+									   class="custom-command-input"
 									   id="customCommandInput"
-									   placeholder="enter-command" 
+									   placeholder="enter-command"
 									   onkeydown="handleCustomCommandKeydown(event)"
 									   onclick="event.stopPropagation()">
 							</div>
@@ -538,18 +538,18 @@ const html = `<!DOCTYPE html>
 		function addMessage(content, type = 'claude') {
 			const messageDiv = document.createElement('div');
 			messageDiv.className = \`message \${type}\`;
-			
+
 			// Add header for main message types (excluding system)
 			if (type === 'user' || type === 'claude' || type === 'error') {
 				const headerDiv = document.createElement('div');
 				headerDiv.className = 'message-header';
-				
+
 				const iconDiv = document.createElement('div');
 				iconDiv.className = \`message-icon \${type}\`;
-				
+
 				const labelDiv = document.createElement('div');
 				labelDiv.className = 'message-label';
-				
+
 				// Set icon and label based on type
 				switch(type) {
 					case 'user':
@@ -565,24 +565,24 @@ const html = `<!DOCTYPE html>
 						labelDiv.textContent = 'Error';
 						break;
 				}
-				
+
 				// Add copy button
 				const copyBtn = document.createElement('button');
 				copyBtn.className = 'copy-btn';
 				copyBtn.title = 'Copy message';
 				copyBtn.onclick = () => copyMessageContent(messageDiv);
 				copyBtn.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>';
-				
+
 				headerDiv.appendChild(iconDiv);
 				headerDiv.appendChild(labelDiv);
 				headerDiv.appendChild(copyBtn);
 				messageDiv.appendChild(headerDiv);
 			}
-			
+
 			// Add content
 			const contentDiv = document.createElement('div');
 			contentDiv.className = 'message-content';
-			
+
 			if(type == 'user' || type === 'claude' || type === 'thinking'){
 				contentDiv.innerHTML = content;
 			} else {
@@ -590,7 +590,7 @@ const html = `<!DOCTYPE html>
 				preElement.textContent = content;
 				contentDiv.appendChild(preElement);
 			}
-			
+
 			messageDiv.appendChild(contentDiv);
 			messagesDiv.appendChild(messageDiv);
 			messagesDiv.scrollTop = messagesDiv.scrollHeight;
@@ -600,15 +600,15 @@ const html = `<!DOCTYPE html>
 		function addToolUseMessage(data) {
 			const messageDiv = document.createElement('div');
 			messageDiv.className = 'message tool';
-			
+
 			// Create modern header with icon
 			const headerDiv = document.createElement('div');
 			headerDiv.className = 'tool-header';
-			
+
 			const iconDiv = document.createElement('div');
 			iconDiv.className = 'tool-icon';
 			iconDiv.textContent = '🔧';
-			
+
 			const toolInfoElement = document.createElement('div');
 			toolInfoElement.className = 'tool-info';
 			let toolName = data.toolInfo.replace('🔧 Executing: ', '');
@@ -617,18 +617,18 @@ const html = `<!DOCTYPE html>
 				toolName = 'Update Todos';
 			}
 			toolInfoElement.textContent = toolName;
-			
+
 			headerDiv.appendChild(iconDiv);
 			headerDiv.appendChild(toolInfoElement);
 			messageDiv.appendChild(headerDiv);
-			
+
 			if (data.rawInput) {
 				const inputElement = document.createElement('div');
 				inputElement.className = 'tool-input';
-				
+
 				const contentDiv = document.createElement('div');
 				contentDiv.className = 'tool-input-content';
-				
+
 				// Handle TodoWrite specially or format raw input
 				if (data.toolName === 'TodoWrite' && data.rawInput.todos) {
 					let todoHtml = 'Todo List Update:';
@@ -651,26 +651,26 @@ const html = `<!DOCTYPE html>
 						contentDiv.innerHTML = formatToolInputUI(data.rawInput);
 					}
 				}
-				
+
 				inputElement.appendChild(contentDiv);
 				messageDiv.appendChild(inputElement);
 			} else if (data.toolInput) {
 				// Fallback for pre-formatted input
 				const inputElement = document.createElement('div');
 				inputElement.className = 'tool-input';
-				
+
 				const labelDiv = document.createElement('div');
 				labelDiv.className = 'tool-input-label';
 				labelDiv.textContent = 'INPUT';
 				inputElement.appendChild(labelDiv);
-				
+
 				const contentDiv = document.createElement('div');
 				contentDiv.className = 'tool-input-content';
 				contentDiv.textContent = data.toolInput;
 				inputElement.appendChild(contentDiv);
 				messageDiv.appendChild(inputElement);
 			}
-			
+
 			messagesDiv.appendChild(messageDiv);
 			messagesDiv.scrollTop = messagesDiv.scrollHeight;
 		}
@@ -678,7 +678,7 @@ const html = `<!DOCTYPE html>
 		function createExpandableInput(toolInput, rawInput) {
 			try {
 				let html = toolInput.replace(/\\[expand\\]/g, '<span class="expand-btn" onclick="toggleExpand(this)">expand</span>');
-				
+
 				// Store raw input data for expansion
 				if (rawInput && typeof rawInput === 'object') {
 					let btnIndex = 0;
@@ -692,7 +692,7 @@ const html = `<!DOCTYPE html>
 						return \`<span class="expand-btn" data-key="\${key}" data-value="\${escapedValue}" onclick="toggleExpand(this)">expand</span>\`;
 					});
 				}
-				
+
 				return html;
 			} catch (error) {
 				console.error('Error creating expandable input:', error);
@@ -703,8 +703,8 @@ const html = `<!DOCTYPE html>
 
 		function addToolResultMessage(data) {
 			// For Read and Edit tools with hidden flag, just hide loading state and show completion message
-			if (data.hidden && (data.toolName === 'Read' || data.toolName === 'Edit' || data.toolName === 'TodoWrite' || data.toolName === 'MultiEdit') && !data.isError) {				
-				return	
+			if (data.hidden && (data.toolName === 'Read' || data.toolName === 'Edit' || data.toolName === 'TodoWrite' || data.toolName === 'MultiEdit') && !data.isError) {
+				return
 				// Show completion message
 				const toolName = data.toolName;
 				let completionText;
@@ -723,43 +723,43 @@ const html = `<!DOCTYPE html>
 
 			const messageDiv = document.createElement('div');
 			messageDiv.className = data.isError ? 'message error' : 'message tool-result';
-			
+
 			// Create header
 			const headerDiv = document.createElement('div');
 			headerDiv.className = 'message-header';
-			
+
 			const iconDiv = document.createElement('div');
 			iconDiv.className = data.isError ? 'message-icon error' : 'message-icon';
-			iconDiv.style.background = data.isError ? 
-				'linear-gradient(135deg, #e74c3c 0%, #c0392b 100%)' : 
+			iconDiv.style.background = data.isError ?
+				'linear-gradient(135deg, #e74c3c 0%, #c0392b 100%)' :
 				'linear-gradient(135deg, #1cc08c 0%, #16a974 100%)';
 			iconDiv.textContent = data.isError ? '❌' : '✅';
-			
+
 			const labelDiv = document.createElement('div');
 			labelDiv.className = 'message-label';
 			labelDiv.textContent = data.isError ? 'Error' : 'Result';
-			
+
 			headerDiv.appendChild(iconDiv);
 			headerDiv.appendChild(labelDiv);
 			messageDiv.appendChild(headerDiv);
-			
+
 			// Add content
 			const contentDiv = document.createElement('div');
 			contentDiv.className = 'message-content';
-			
+
 			// Check if it's a tool result and truncate appropriately
 			let content = data.content;
 			if (content.length > 200 && !data.isError) {
 				const truncateAt = 197;
 				const truncated = content.substring(0, truncateAt);
 				const resultId = 'result_' + Math.random().toString(36).substr(2, 9);
-				
+
 				const preElement = document.createElement('pre');
 				preElement.innerHTML = '<span id="' + resultId + '_visible">' + escapeHtml(truncated) + '</span>' +
 									   '<span id="' + resultId + '_ellipsis">...</span>' +
 									   '<span id="' + resultId + '_hidden" style="display: none;">' + escapeHtml(content.substring(truncateAt)) + '</span>';
 				contentDiv.appendChild(preElement);
-				
+
 				// Add expand button container
 				const expandContainer = document.createElement('div');
 				expandContainer.className = 'diff-expand-container';
@@ -774,7 +774,7 @@ const html = `<!DOCTYPE html>
 				preElement.textContent = content;
 				contentDiv.appendChild(preElement);
 			}
-			
+
 			messageDiv.appendChild(contentDiv);
 			messagesDiv.appendChild(messageDiv);
 			messagesDiv.scrollTop = messagesDiv.scrollHeight;
@@ -787,7 +787,7 @@ const html = `<!DOCTYPE html>
 					const truncateAt = 97;
 					const truncated = str.substring(0, truncateAt);
 					const inputId = 'input_' + Math.random().toString(36).substr(2, 9);
-					
+
 					return '<span id="' + inputId + '_visible">' + escapeHtml(truncated) + '</span>' +
 						   '<span id="' + inputId + '_ellipsis">...</span>' +
 						   '<span id="' + inputId + '_hidden" style="display: none;">' + escapeHtml(str.substring(truncateAt)) + '</span>' +
@@ -808,10 +808,10 @@ const html = `<!DOCTYPE html>
 			let isFirst = true;
 			for (const [key, value] of Object.entries(input)) {
 				const valueStr = typeof value === 'string' ? value : JSON.stringify(value, null, 2);
-				
+
 				if (!isFirst) result += '\\n';
 				isFirst = false;
-				
+
 				// Special formatting for file_path in Read tool context
 				if (key === 'file_path') {
 					const formattedPath = formatFilePath(valueStr);
@@ -840,24 +840,24 @@ const html = `<!DOCTYPE html>
 			// Format file path with better display
 			const formattedPath = formatFilePath(input.file_path);
 			let result = '<div class="diff-file-path" onclick="openFileInEditor(\\\'' + escapeHtml(input.file_path) + '\\\')">' + formattedPath + '</div>\\n';
-			
+
 			// Create diff view
 			const oldLines = input.old_string.split('\\n');
 			const newLines = input.new_string.split('\\n');
-			const allLines = [...oldLines.map(line => ({type: 'removed', content: line})), 
+			const allLines = [...oldLines.map(line => ({type: 'removed', content: line})),
 							 ...newLines.map(line => ({type: 'added', content: line}))];
-			
+
 			const maxLines = 6;
 			const shouldTruncate = allLines.length > maxLines;
 			const visibleLines = shouldTruncate ? allLines.slice(0, maxLines) : allLines;
 			const hiddenLines = shouldTruncate ? allLines.slice(maxLines) : [];
-			
+
 			result += '<div class="diff-container">';
 			result += '<div class="diff-header">Changes:</div>';
-			
+
 			// Create a unique ID for this diff
 			const diffId = 'diff_' + Math.random().toString(36).substr(2, 9);
-			
+
 			// Show visible lines
 			result += '<div id="' + diffId + '_visible">';
 			for (const line of visibleLines) {
@@ -866,7 +866,7 @@ const html = `<!DOCTYPE html>
 				result += '<div class="diff-line ' + cssClass + '">' + prefix + escapeHtml(line.content) + '</div>';
 			}
 			result += '</div>';
-			
+
 			// Show hidden lines (initially hidden)
 			if (shouldTruncate) {
 				result += '<div id="' + diffId + '_hidden" style="display: none;">';
@@ -876,15 +876,15 @@ const html = `<!DOCTYPE html>
 					result += '<div class="diff-line ' + cssClass + '">' + prefix + escapeHtml(line.content) + '</div>';
 				}
 				result += '</div>';
-				
+
 				// Add expand button
 				result += '<div class="diff-expand-container">';
 				result += '<button class="diff-expand-btn" onclick="toggleDiffExpansion(\\\'' + diffId + '\\\')">Show ' + hiddenLines.length + ' more lines</button>';
 				result += '</div>';
 			}
-			
+
 			result += '</div>';
-			
+
 			// Add other properties if they exist
 			for (const [key, value] of Object.entries(input)) {
 				if (key !== 'file_path' && key !== 'old_string' && key !== 'new_string') {
@@ -892,7 +892,7 @@ const html = `<!DOCTYPE html>
 					result += '\\n<strong>' + key + ':</strong> ' + valueStr;
 				}
 			}
-			
+
 			return result;
 		}
 
@@ -909,7 +909,7 @@ const html = `<!DOCTYPE html>
 			// Format file path with better display
 			const formattedPath = formatFilePath(input.file_path);
 			let result = '<div class="diff-file-path" onclick="openFileInEditor(\\\'' + escapeHtml(input.file_path) + '\\\')">' + formattedPath + '</div>\\n';
-			
+
 			// Count total lines across all edits for truncation
 			let totalLines = 0;
 			for (const edit of input.edits) {
@@ -922,26 +922,26 @@ const html = `<!DOCTYPE html>
 
 			const maxLines = 6;
 			const shouldTruncate = totalLines > maxLines;
-			
+
 			result += '<div class="diff-container">';
 			result += '<div class="diff-header">Changes (' + input.edits.length + ' edit' + (input.edits.length > 1 ? 's' : '') + '):</div>';
-			
+
 			// Create a unique ID for this diff
 			const diffId = 'multiedit_' + Math.random().toString(36).substr(2, 9);
-			
+
 			let currentLineCount = 0;
 			let visibleEdits = [];
 			let hiddenEdits = [];
-			
+
 			// Determine which edits to show/hide based on line count
 			for (let i = 0; i < input.edits.length; i++) {
 				const edit = input.edits[i];
 				if (!edit.old_string || !edit.new_string) continue;
-				
+
 				const oldLines = edit.old_string.split('\\n');
 				const newLines = edit.new_string.split('\\n');
 				const editLines = oldLines.length + newLines.length;
-				
+
 				if (shouldTruncate && currentLineCount + editLines > maxLines && visibleEdits.length > 0) {
 					hiddenEdits.push(edit);
 				} else {
@@ -949,7 +949,7 @@ const html = `<!DOCTYPE html>
 					currentLineCount += editLines;
 				}
 			}
-			
+
 			// Show visible edits
 			result += '<div id="' + diffId + '_visible">';
 			for (let i = 0; i < visibleEdits.length; i++) {
@@ -958,7 +958,7 @@ const html = `<!DOCTYPE html>
 				result += formatSingleEdit(edit, i + 1);
 			}
 			result += '</div>';
-			
+
 			// Show hidden edits (initially hidden)
 			if (hiddenEdits.length > 0) {
 				result += '<div id="' + diffId + '_hidden" style="display: none;">';
@@ -968,15 +968,15 @@ const html = `<!DOCTYPE html>
 					result += formatSingleEdit(edit, visibleEdits.length + i + 1);
 				}
 				result += '</div>';
-				
+
 				// Add expand button
 				result += '<div class="diff-expand-container">';
 				result += '<button class="diff-expand-btn" onclick="toggleDiffExpansion(\\\'' + diffId + '\\\')">Show ' + hiddenEdits.length + ' more edit' + (hiddenEdits.length > 1 ? 's' : '') + '</button>';
 				result += '</div>';
 			}
-			
+
 			result += '</div>';
-			
+
 			// Add other properties if they exist
 			for (const [key, value] of Object.entries(input)) {
 				if (key !== 'file_path' && key !== 'edits') {
@@ -984,28 +984,28 @@ const html = `<!DOCTYPE html>
 					result += '\\n<strong>' + key + ':</strong> ' + valueStr;
 				}
 			}
-			
+
 			return result;
 		}
 
 		function formatSingleEdit(edit, editNumber) {
 			let result = '<div class="single-edit">';
 			result += '<div class="edit-number">Edit #' + editNumber + '</div>';
-			
+
 			// Create diff view for this single edit
 			const oldLines = edit.old_string.split('\\n');
 			const newLines = edit.new_string.split('\\n');
-			
+
 			// Show removed lines
 			for (const line of oldLines) {
 				result += '<div class="diff-line removed">- ' + escapeHtml(line) + '</div>';
 			}
-			
+
 			// Show added lines
 			for (const line of newLines) {
 				result += '<div class="diff-line added">+ ' + escapeHtml(line) + '</div>';
 			}
-			
+
 			result += '</div>';
 			return result;
 		}
@@ -1023,28 +1023,28 @@ const html = `<!DOCTYPE html>
 			// Format file path with better display
 			const formattedPath = formatFilePath(input.file_path);
 			let result = '<div class="diff-file-path" onclick="openFileInEditor(\\\'' + escapeHtml(input.file_path) + '\\\')">' + formattedPath + '</div>\\n';
-			
+
 			// Create diff view showing all content as additions
 			const contentLines = input.content.split('\\n');
-			
+
 			const maxLines = 6;
 			const shouldTruncate = contentLines.length > maxLines;
 			const visibleLines = shouldTruncate ? contentLines.slice(0, maxLines) : contentLines;
 			const hiddenLines = shouldTruncate ? contentLines.slice(maxLines) : [];
-			
+
 			result += '<div class="diff-container">';
 			result += '<div class="diff-header">New file content:</div>';
-			
+
 			// Create a unique ID for this diff
 			const diffId = 'write_' + Math.random().toString(36).substr(2, 9);
-			
+
 			// Show visible lines (all as additions)
 			result += '<div id="' + diffId + '_visible">';
 			for (const line of visibleLines) {
 				result += '<div class="diff-line added">+ ' + escapeHtml(line) + '</div>';
 			}
 			result += '</div>';
-			
+
 			// Show hidden lines (initially hidden)
 			if (shouldTruncate) {
 				result += '<div id="' + diffId + '_hidden" style="display: none;">';
@@ -1052,15 +1052,15 @@ const html = `<!DOCTYPE html>
 					result += '<div class="diff-line added">+ ' + escapeHtml(line) + '</div>';
 				}
 				result += '</div>';
-				
+
 				// Add expand button
 				result += '<div class="diff-expand-container">';
 				result += '<button class="diff-expand-btn" onclick="toggleDiffExpansion(\\\'' + diffId + '\\\')">Show ' + hiddenLines.length + ' more lines</button>';
 				result += '</div>';
 			}
-			
+
 			result += '</div>';
-			
+
 			// Add other properties if they exist
 			for (const [key, value] of Object.entries(input)) {
 				if (key !== 'file_path' && key !== 'content') {
@@ -1068,7 +1068,7 @@ const html = `<!DOCTYPE html>
 					result += '\\n<strong>' + key + ':</strong> ' + valueStr;
 				}
 			}
-			
+
 			return result;
 		}
 
@@ -1087,19 +1087,19 @@ const html = `<!DOCTYPE html>
 
 		function formatFilePath(filePath) {
 			if (!filePath) return '';
-			
+
 			// Extract just the filename
 			const parts = filePath.split('/');
 			const fileName = parts[parts.length - 1];
-			
-			return '<span class="file-path-truncated" title="' + escapeHtml(filePath) + '" data-file-path="' + escapeHtml(filePath) + '">' + 
+
+			return '<span class="file-path-truncated" title="' + escapeHtml(filePath) + '" data-file-path="' + escapeHtml(filePath) + '">' +
 				   '<span class="file-icon">📄</span>' + escapeHtml(fileName) + '</span>';
 		}
 
 		function toggleDiffExpansion(diffId) {
 			const hiddenDiv = document.getElementById(diffId + '_hidden');
 			const button = document.querySelector('[onclick*="' + diffId + '"]');
-			
+
 			if (hiddenDiv && button) {
 				if (hiddenDiv.style.display === 'none') {
 					hiddenDiv.style.display = 'block';
@@ -1116,7 +1116,7 @@ const html = `<!DOCTYPE html>
 			const hiddenDiv = document.getElementById(resultId + '_hidden');
 			const ellipsis = document.getElementById(resultId + '_ellipsis');
 			const button = document.querySelector('[onclick*="toggleResultExpansion(\\'' + resultId + '\\\')"]');
-			
+
 			if (hiddenDiv && button) {
 				if (hiddenDiv.style.display === 'none') {
 					hiddenDiv.style.display = 'inline';
@@ -1139,7 +1139,7 @@ const html = `<!DOCTYPE html>
 					planMode: planModeEnabled,
 					thinkingMode: thinkingModeEnabled
 				});
-				
+
 				messageInput.value = '';
 			}
 		}
@@ -1189,25 +1189,25 @@ const html = `<!DOCTYPE html>
 			if (isProcessing) {
 				// While processing, show tokens and elapsed time
 				const totalTokens = totalTokensInput + totalTokensOutput;
-				const tokensStr = totalTokens > 0 ? 
+				const tokensStr = totalTokens > 0 ?
 					\`\${totalTokens.toLocaleString()} tokens\` : '0 tokens';
-				
+
 				let elapsedStr = '';
 				if (requestStartTime) {
 					const elapsedSeconds = Math.floor((Date.now() - requestStartTime) / 1000);
 					elapsedStr = \` • \${elapsedSeconds}s\`;
 				}
-				
+
 				const statusText = \`Processing • \${tokensStr}\${elapsedStr}\`;
 				updateStatus(statusText, 'processing');
 			} else {
 				// When ready, show full info
 				const costStr = totalCost > 0 ? \`$\${totalCost.toFixed(4)}\` : '$0.00';
 				const totalTokens = totalTokensInput + totalTokensOutput;
-				const tokensStr = totalTokens > 0 ? 
+				const tokensStr = totalTokens > 0 ?
 					\`\${totalTokens.toLocaleString()} tokens\` : '0 tokens';
 				const requestStr = requestCount > 0 ? \`\${requestCount} requests\` : '';
-				
+
 				const statusText = \`Ready • \${costStr} • \${tokensStr}\${requestStr ? \` • \${requestStr}\` : ''}\`;
 				updateStatus(statusText, 'ready');
 			}
@@ -1235,7 +1235,7 @@ const html = `<!DOCTYPE html>
 		function adjustTextareaHeight() {
 			// Reset height to calculate new height
 			messageInput.style.height = 'auto';
-			
+
 			// Get computed styles
 			const computedStyle = getComputedStyle(messageInput);
 			const lineHeight = parseFloat(computedStyle.lineHeight);
@@ -1243,13 +1243,13 @@ const html = `<!DOCTYPE html>
 			const paddingBottom = parseFloat(computedStyle.paddingBottom);
 			const borderTop = parseFloat(computedStyle.borderTopWidth);
 			const borderBottom = parseFloat(computedStyle.borderBottomWidth);
-			
+
 			// Calculate heights
 			const scrollHeight = messageInput.scrollHeight;
 			const maxRows = 5;
 			const minHeight = lineHeight + paddingTop + paddingBottom + borderTop + borderBottom;
 			const maxHeight = (lineHeight * maxRows) + paddingTop + paddingBottom + borderTop + borderBottom;
-			
+
 			// Set height
 			if (scrollHeight <= maxHeight) {
 				messageInput.style.height = Math.max(scrollHeight, minHeight) + 'px';
@@ -1261,7 +1261,7 @@ const html = `<!DOCTYPE html>
 		}
 
 		messageInput.addEventListener('input', adjustTextareaHeight);
-		
+
 		messageInput.addEventListener('keydown', (e) => {
 			if (e.key === 'Enter' && !e.shiftKey) {
 				e.preventDefault();
@@ -1295,16 +1295,16 @@ const html = `<!DOCTYPE html>
 		// Add explicit paste event handler for better clipboard support in VSCode webviews
 		messageInput.addEventListener('paste', async (e) => {
 			e.preventDefault();
-			
+
 			try {
 				// Try to get clipboard data from the event first
 				const clipboardData = e.clipboardData;
 				let text = '';
-				
+
 				if (clipboardData) {
 					text = clipboardData.getData('text/plain');
 				}
-				
+
 				// If no text from event, try navigator.clipboard API
 				if (!text && navigator.clipboard && navigator.clipboard.readText) {
 					try {
@@ -1313,7 +1313,7 @@ const html = `<!DOCTYPE html>
 						console.log('Clipboard API failed:', err);
 					}
 				}
-				
+
 				// If still no text, request from VS Code extension
 				if (!text) {
 					vscode.postMessage({
@@ -1321,19 +1321,19 @@ const html = `<!DOCTYPE html>
 					});
 					return;
 				}
-				
+
 				// Insert text at cursor position
 				const start = messageInput.selectionStart;
 				const end = messageInput.selectionEnd;
 				const currentValue = messageInput.value;
-				
+
 				const newValue = currentValue.substring(0, start) + text + currentValue.substring(end);
 				messageInput.value = newValue;
-				
+
 				// Set cursor position after pasted text
 				const newCursorPos = start + text.length;
 				messageInput.setSelectionRange(newCursorPos, newCursorPos);
-				
+
 				// Trigger input event to adjust height
 				messageInput.dispatchEvent(new Event('input', { bubbles: true }));
 			} catch (error) {
@@ -1438,7 +1438,7 @@ const html = `<!DOCTYPE html>
 			const thinkingSlider = document.getElementById('thinkingIntensitySlider');
 			const intensityValues = ['think', 'think-hard', 'think-harder', 'ultrathink'];
 			const thinkingIntensity = intensityValues[thinkingSlider.value] || 'think';
-			
+
 			// Send settings to VS Code
 			vscode.postMessage({
 				type: 'updateSettings',
@@ -1467,14 +1467,14 @@ const html = `<!DOCTYPE html>
 					label.classList.remove('active');
 				}
 			}
-			
+
 			// Don't update toggle name until user confirms
 		}
 
 		function setThinkingIntensityValue(value) {
 			// Set slider value for thinking intensity modal
 			document.getElementById('thinkingIntensitySlider').value = value;
-			
+
 			// Update visual state
 			updateThinkingIntensityDisplay(value);
 		}
@@ -1482,13 +1482,13 @@ const html = `<!DOCTYPE html>
 		function confirmThinkingIntensity() {
 			// Get the current slider value
 			const currentValue = document.getElementById('thinkingIntensitySlider').value;
-			
+
 			// Update the toggle name with confirmed selection
 			updateThinkingModeToggleName(currentValue);
-			
+
 			// Save the current intensity setting
 			saveThinkingIntensity();
-			
+
 			// Close the modal
 			hideThinkingIntensityModal();
 		}
@@ -1515,7 +1515,7 @@ const html = `<!DOCTYPE html>
 		function openWSLSettings() {
 			// Dismiss the alert
 			dismissWSLAlert();
-			
+
 			// Open settings modal
 			toggleSettings();
 		}
@@ -1523,16 +1523,16 @@ const html = `<!DOCTYPE html>
 		function executeSlashCommand(command) {
 			// Hide the modal
 			hideSlashCommandsModal();
-			
+
 			// Clear the input since user selected a command
 			messageInput.value = '';
-			
+
 			// Send command to VS Code to execute in terminal
 			vscode.postMessage({
 				type: 'executeSlashCommand',
 				command: command
 			});
-			
+
 			// Show user feedback
 			addMessage('user', \`Executing /\${command} command in terminal. Check the terminal output and return when ready.\`, 'assistant');
 		}
@@ -1558,7 +1558,7 @@ const html = `<!DOCTYPE html>
 
 		function selectModel(model, fromBackend = false) {
 			currentModel = model;
-			
+
 			// Update the display text
 			const displayNames = {
 				'opus': 'Opus',
@@ -1566,24 +1566,24 @@ const html = `<!DOCTYPE html>
 				'default': 'Model'
 			};
 			document.getElementById('selectedModel').textContent = displayNames[model] || model;
-			
+
 			// Only send model selection to VS Code extension if not from backend
 			if (!fromBackend) {
 				vscode.postMessage({
 					type: 'selectModel',
 					model: model
 				});
-				
+
 				// Save preference
 				localStorage.setItem('selectedModel', model);
 			}
-			
+
 			// Update radio button if modal is open
 			const radioButton = document.getElementById('model-' + model);
 			if (radioButton) {
 				radioButton.checked = true;
 			}
-			
+
 			hideModelModal();
 		}
 
@@ -1636,7 +1636,7 @@ const html = `<!DOCTYPE html>
 			if (contentDiv) {
 				// Get text content, preserving line breaks
 				const text = contentDiv.innerText || contentDiv.textContent;
-				
+
 				// Copy to clipboard
 				navigator.clipboard.writeText(text).then(() => {
 					// Show brief feedback
@@ -1644,7 +1644,7 @@ const html = `<!DOCTYPE html>
 					const originalHtml = copyBtn.innerHTML;
 					copyBtn.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>';
 					copyBtn.style.color = '#4caf50';
-					
+
 					setTimeout(() => {
 						copyBtn.innerHTML = originalHtml;
 						copyBtn.style.color = '';
@@ -1657,31 +1657,31 @@ const html = `<!DOCTYPE html>
 
 		window.addEventListener('message', event => {
 			const message = event.data;
-			
+
 			switch (message.type) {
 				case 'ready':
 					addMessage(message.data, 'system');
 					updateStatusWithTotals();
 					break;
-					
+
 				case 'output':
 					if (message.data.trim()) {
 						addMessage(parseSimpleMarkdown(message.data), 'claude');
 					}
 					updateStatusWithTotals();
 					break;
-					
+
 				case 'userInput':
 					if (message.data.trim()) {
 						addMessage(parseSimpleMarkdown(message.data), 'user');
 					}
 					break;
-					
+
 				case 'loading':
 					addMessage(message.data, 'system');
 					updateStatusWithTotals();
 					break;
-					
+
 				case 'setProcessing':
 					isProcessing = message.data;
 					if (isProcessing) {
@@ -1695,7 +1695,7 @@ const html = `<!DOCTYPE html>
 					}
 					updateStatusWithTotals();
 					break;
-					
+
 				case 'clearLoading':
 					// Remove the last loading message
 					const messages = messagesDiv.children;
@@ -1707,14 +1707,14 @@ const html = `<!DOCTYPE html>
 					}
 					updateStatusWithTotals();
 					break;
-					
+
 				case 'error':
 					if (message.data.trim()) {
 						addMessage(message.data, 'error');
 					}
 					updateStatusWithTotals();
 					break;
-					
+
 				case 'toolUse':
 					if (typeof message.data === 'object') {
 						addToolUseMessage(message.data);
@@ -1722,17 +1722,17 @@ const html = `<!DOCTYPE html>
 						addMessage(message.data, 'tool');
 					}
 					break;
-					
+
 				case 'toolResult':
 							addToolResultMessage(message.data);
 					break;
-					
+
 				case 'thinking':
 					if (message.data.trim()) {
 						addMessage('💭 Thinking...' + parseSimpleMarkdown(message.data), 'thinking');
 					}
 					break;
-					
+
 				case 'sessionInfo':
 					console.log('Session info:', message.data);
 					if (message.data.sessionId) {
@@ -1746,32 +1746,32 @@ const html = `<!DOCTYPE html>
 						//addMessage(sessionDetails.join('\\n'), 'system');
 					}
 					break;
-					
+
 				case 'updateTokens':
 					console.log('Tokens updated in real-time:', message.data);
 					// Update token totals in real-time
 					totalTokensInput = message.data.totalTokensInput || 0;
 					totalTokensOutput = message.data.totalTokensOutput || 0;
-					
+
 					// Update status bar immediately
 					updateStatusWithTotals();
-					
+
 					// Show detailed token breakdown for current message
 					const currentTotal = (message.data.currentInputTokens || 0) + (message.data.currentOutputTokens || 0);
 					if (currentTotal > 0) {
 						let tokenBreakdown = \`📊 Tokens: \${currentTotal.toLocaleString()}\`;
-						
+
 						if (message.data.cacheCreationTokens || message.data.cacheReadTokens) {
 							const cacheInfo = [];
 							if (message.data.cacheCreationTokens) cacheInfo.push(\`\${message.data.cacheCreationTokens.toLocaleString()} cache created\`);
 							if (message.data.cacheReadTokens) cacheInfo.push(\`\${message.data.cacheReadTokens.toLocaleString()} cache read\`);
 							tokenBreakdown += \` • \${cacheInfo.join(' • ')}\`;
 						}
-						
+
 						addMessage(tokenBreakdown, 'system');
 					}
 					break;
-					
+
 				case 'updateTotals':
 					console.log('Totals updated:', message.data);
 					console.log('Cost data received:', {
@@ -1784,10 +1784,10 @@ const html = `<!DOCTYPE html>
 					totalTokensInput = message.data.totalTokensInput || 0;
 					totalTokensOutput = message.data.totalTokensOutput || 0;
 					requestCount = message.data.requestCount || 0;
-					
+
 					// Update status bar with new totals
 					updateStatusWithTotals();
-					
+
 					// Show current request info if available
 					if (message.data.currentCost || message.data.currentDuration) {
 						const currentCostStr = message.data.currentCost ? \`$\${message.data.currentCost.toFixed(4)}\` : 'N/A';
@@ -1795,13 +1795,13 @@ const html = `<!DOCTYPE html>
 						addMessage(\`Request completed - Cost: \${currentCostStr}, Duration: \${currentDurationStr}\`, 'system');
 					}
 					break;
-					
+
 				case 'sessionResumed':
 					console.log('Session resumed:', message.data);
 					showSessionInfo(message.data.sessionId);
 					addMessage(\`📝 Resumed previous session\\n🆔 Session ID: \${message.data.sessionId}\\n💡 Your conversation history is preserved\`, 'system');
 					break;
-					
+
 				case 'sessionCleared':
 					console.log('Session cleared');
 					// Clear all messages from UI
@@ -1815,36 +1815,36 @@ const html = `<!DOCTYPE html>
 					requestCount = 0;
 					updateStatusWithTotals();
 					break;
-					
+
 				case 'loginRequired':
 					addMessage('🔐 Login Required\\n\\nYour Claude API key is invalid or expired.\\nA terminal has been opened - please run the login process there.\\n\\nAfter logging in, come back to this chat to continue.', 'error');
 					updateStatus('Login Required', 'error');
 					break;
-					
+
 				case 'showRestoreOption':
 					console.log('Show restore option:', message.data);
 					showRestoreContainer(message.data);
 					break;
-					
+
 				case 'restoreProgress':
 					addMessage('🔄 ' + message.data, 'system');
 					break;
-					
+
 				case 'restoreSuccess':
 					//hideRestoreContainer(message.data.commitSha);
 					addMessage('✅ ' + message.data.message, 'system');
 					break;
-					
+
 				case 'restoreError':
 					addMessage('❌ ' + message.data, 'error');
 					break;
-					
+
 				case 'workspaceFiles':
 					filteredFiles = message.data;
 					selectedFileIndex = -1;
 					renderFileList();
 					break;
-					
+
 				case 'imagePath':
 					// Add the image path to the textarea
 					const currentText = messageInput.value;
@@ -1853,7 +1853,7 @@ const html = `<!DOCTYPE html>
 					messageInput.focus();
 					adjustTextareaHeight();
 					break;
-					
+
 				case 'conversationList':
 					displayConversationList(message.data);
 					break;
@@ -1871,7 +1871,7 @@ const html = `<!DOCTYPE html>
 					break;
 			}
 		});
-		
+
 		// Session management functions
 		function newSession() {
 			vscode.postMessage({
@@ -1891,17 +1891,17 @@ const html = `<!DOCTYPE html>
 			const restoreContainer = document.createElement('div');
 			restoreContainer.className = 'restore-container';
 			restoreContainer.id = \`restore-\${data.sha}\`;
-			
+
 			const timeAgo = new Date(data.timestamp).toLocaleTimeString();
 			const shortSha = data.sha ? data.sha.substring(0, 8) : 'unknown';
-			
+
 			restoreContainer.innerHTML = \`
 				<button class="restore-btn dark" onclick="restoreToCommit('\${data.sha}')">
 					Restore checkpoint
 				</button>
 				<span class="restore-date">\${timeAgo}</span>
 			\`;
-			
+
 			messagesDiv.appendChild(restoreContainer);
 			messagesDiv.scrollTop = messagesDiv.scrollHeight;
 		}
@@ -1912,14 +1912,14 @@ const html = `<!DOCTYPE html>
 				container.remove();
 			}
 		}
-		
+
 		function showSessionInfo(sessionId) {
 			// const sessionInfo = document.getElementById('sessionInfo');
 			// const sessionIdSpan = document.getElementById('sessionId');
 			const sessionStatus = document.getElementById('sessionStatus');
 			const newSessionBtn = document.getElementById('newSessionBtn');
 			const historyBtn = document.getElementById('historyBtn');
-			
+
 			if (sessionStatus && newSessionBtn) {
 				// sessionIdSpan.textContent = sessionId.substring(0, 8);
 				// sessionIdSpan.title = \`Full session ID: \${sessionId} (click to copy)\`;
@@ -1931,7 +1931,7 @@ const html = `<!DOCTYPE html>
 				if (historyBtn) historyBtn.style.display = 'block';
 			}
 		}
-		
+
 		function copySessionId(sessionId) {
 			navigator.clipboard.writeText(sessionId).then(() => {
 				// Show temporary feedback
@@ -1947,13 +1947,13 @@ const html = `<!DOCTYPE html>
 				console.error('Failed to copy session ID:', err);
 			});
 		}
-		
+
 		function hideSessionInfo() {
 			// const sessionInfo = document.getElementById('sessionInfo');
 			const sessionStatus = document.getElementById('sessionStatus');
 			const newSessionBtn = document.getElementById('newSessionBtn');
 			const historyBtn = document.getElementById('historyBtn');
-			
+
 			if (sessionStatus && newSessionBtn) {
 				// sessionInfo.style.display = 'none';
 				sessionStatus.style.display = 'none';
@@ -1966,16 +1966,50 @@ const html = `<!DOCTYPE html>
 		}
 
 		updateStatus('Initializing...', 'disconnected');
-		
+
 
 		function parseSimpleMarkdown(markdown) {
+			// Handle code blocks first (before splitting into lines)
+			let inCodeBlock = false;
+			let codeBlockContent = '';
+			let codeBlockLanguage = '';
+
+			// Split markdown into lines for processing
 			const lines = markdown.split('\\n');
 			let html = '';
 			let inUnorderedList = false;
 			let inOrderedList = false;
 
 			for (let line of lines) {
+				// Handle code blocks
+				if (line.trim().startsWith('\`\`\`')) {
+					if (!inCodeBlock) {
+						// Starting a code block
+						inCodeBlock = true;
+						codeBlockLanguage = line.trim().slice(3).trim();
+						codeBlockContent = '';
+						continue;
+					} else {
+						// Ending a code block
+						inCodeBlock = false;
+						html += '<pre><code' + (codeBlockLanguage ? ' class="language-' + codeBlockLanguage + '"' : '') + '>' +
+							codeBlockContent.replace(/</g, '&lt;').replace(/>/g, '&gt;') + '</code></pre>';
+						codeBlockContent = '';
+						codeBlockLanguage = '';
+						continue;
+					}
+				}
+
+				// If we're in a code block, just collect the content
+				if (inCodeBlock) {
+					codeBlockContent += (codeBlockContent ? '\\n' : '') + line;
+					continue;
+				}
+
 				line = line.trim();
+
+				// Inline code (before other formatting)
+				line = line.replace(/\`([^\`]+)\`/g, '<code>$1</code>');
 
 				// Bold
 				line = line.replace(/\\*\\*(.*?)\\*\\*/g, '<strong>$1</strong>');
@@ -2048,7 +2082,7 @@ const html = `<!DOCTYPE html>
 		function toggleConversationHistory() {
 			const historyDiv = document.getElementById('conversationHistory');
 			const chatContainer = document.getElementById('chatContainer');
-			
+
 			if (historyDiv.style.display === 'none') {
 				// Show conversation history
 				requestConversationList();
@@ -2073,7 +2107,7 @@ const html = `<!DOCTYPE html>
 				type: 'loadConversation',
 				filename: filename
 			});
-			
+
 			// Hide conversation history and show chat
 			toggleConversationHistory();
 		}
@@ -2085,7 +2119,7 @@ const html = `<!DOCTYPE html>
 				type: 'getWorkspaceFiles',
 				searchTerm: ''
 			});
-			
+
 			// Show modal
 			filePickerModal.style.display = 'flex';
 			fileSearchInput.focus();
@@ -2118,14 +2152,14 @@ const html = `<!DOCTYPE html>
 
 		function renderFileList() {
 			fileList.innerHTML = '';
-			
+
 			filteredFiles.forEach((file, index) => {
 				const fileItem = document.createElement('div');
 				fileItem.className = 'file-item';
 				if (index === selectedFileIndex) {
 					fileItem.classList.add('selected');
 				}
-				
+
 				fileItem.innerHTML = \`
 					<span class="file-icon">\${getFileIcon(file.name)}</span>
 					<div class="file-info">
@@ -2133,11 +2167,11 @@ const html = `<!DOCTYPE html>
 						<div class="file-path">\${file.path}</div>
 					</div>
 				\`;
-				
+
 				fileItem.addEventListener('click', () => {
 					selectFile(file);
 				});
-				
+
 				fileList.appendChild(fileItem);
 			});
 		}
@@ -2147,18 +2181,18 @@ const html = `<!DOCTYPE html>
 			const cursorPos = messageInput.selectionStart;
 			const textBefore = messageInput.value.substring(0, cursorPos);
 			const textAfter = messageInput.value.substring(cursorPos);
-			
+
 			// Replace the @ symbol with the file path
 			const beforeAt = textBefore.substring(0, textBefore.lastIndexOf('@'));
 			const newText = beforeAt + '@' + file.path + ' ' + textAfter;
-			
+
 			messageInput.value = newText;
 			messageInput.focus();
-			
+
 			// Set cursor position after the inserted path
 			const newCursorPos = beforeAt.length + file.path.length + 2;
 			messageInput.setSelectionRange(newCursorPos, newCursorPos);
-			
+
 			hideFilePicker();
 			adjustTextareaHeight();
 		}
@@ -2198,12 +2232,12 @@ const html = `<!DOCTYPE html>
 				opacity: 0;
 				transition: opacity 0.3s ease;
 			\`;
-			
+
 			document.body.appendChild(feedback);
-			
+
 			// Animate in
 			setTimeout(() => feedback.style.opacity = '1', 10);
-			
+
 			// Animate out and remove
 			setTimeout(() => {
 				feedback.style.opacity = '0';
@@ -2240,19 +2274,19 @@ const html = `<!DOCTYPE html>
 
 		function handleClipboardText(text) {
 			if (!text) return;
-			
+
 			// Insert text at cursor position
 			const start = messageInput.selectionStart;
 			const end = messageInput.selectionEnd;
 			const currentValue = messageInput.value;
-			
+
 			const newValue = currentValue.substring(0, start) + text + currentValue.substring(end);
 			messageInput.value = newValue;
-			
+
 			// Set cursor position after pasted text
 			const newCursorPos = start + text.length;
 			messageInput.setSelectionRange(newCursorPos, newCursorPos);
-			
+
 			// Trigger input event to adjust height
 			messageInput.dispatchEvent(new Event('input', { bubbles: true }));
 		}
@@ -2278,7 +2312,7 @@ const html = `<!DOCTYPE html>
 
 		function updateSettings() {
 			// Note: thinking intensity is now handled separately in the thinking intensity modal
-			
+
 			const wslEnabled = document.getElementById('wsl-enabled').checked;
 			const wslDistro = document.getElementById('wsl-distro').value;
 			const wslNodePath = document.getElementById('wsl-node-path').value;
@@ -2334,13 +2368,13 @@ const html = `<!DOCTYPE html>
 		const originalMessageHandler = window.onmessage;
 		window.addEventListener('message', event => {
 			const message = event.data;
-			
+
 			if (message.type === 'settingsData') {
 				// Update UI with current settings
 				const thinkingIntensity = message.data['thinking.intensity'] || 'think';
 				const intensityValues = ['think', 'think-hard', 'think-harder', 'ultrathink'];
 				const sliderValue = intensityValues.indexOf(thinkingIntensity);
-				
+
 				// Update thinking intensity modal if it exists
 				const thinkingIntensitySlider = document.getElementById('thinkingIntensitySlider');
 				if (thinkingIntensitySlider) {
@@ -2350,12 +2384,12 @@ const html = `<!DOCTYPE html>
 					// Update toggle name even if modal isn't open
 					updateThinkingModeToggleName(sliderValue >= 0 ? sliderValue : 0);
 				}
-				
+
 				document.getElementById('wsl-enabled').checked = message.data['wsl.enabled'] || false;
 				document.getElementById('wsl-distro').value = message.data['wsl.distro'] || 'Ubuntu';
 				document.getElementById('wsl-node-path').value = message.data['wsl.nodePath'] || '/usr/bin/node';
 				document.getElementById('wsl-claude-path').value = message.data['wsl.claudePath'] || '/usr/local/bin/claude';
-				
+
 				// Show/hide WSL options
 				document.getElementById('wslOptions').style.display = message.data['wsl.enabled'] ? 'block' : 'none';
 			}
