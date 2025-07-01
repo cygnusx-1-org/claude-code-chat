@@ -1,4 +1,4 @@
-import styles from './ui-styles';
+import styles from './ui-styles'
 const html = `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -665,38 +665,34 @@ const html = `<!DOCTYPE html>
 						contentDiv.innerHTML = formatToolInputUI(data.rawInput);
 					}
 				}
-
+				
 				inputElement.appendChild(contentDiv);
 				messageDiv.appendChild(inputElement);
 			} else if (data.toolInput) {
 				// Fallback for pre-formatted input
 				const inputElement = document.createElement('div');
 				inputElement.className = 'tool-input';
-
+				
 				const labelDiv = document.createElement('div');
 				labelDiv.className = 'tool-input-label';
 				labelDiv.textContent = 'INPUT';
 				inputElement.appendChild(labelDiv);
-
+				
 				const contentDiv = document.createElement('div');
 				contentDiv.className = 'tool-input-content';
 				contentDiv.textContent = data.toolInput;
 				inputElement.appendChild(contentDiv);
 				messageDiv.appendChild(inputElement);
 			}
-
+			
 			messagesDiv.appendChild(messageDiv);
-
-			// Only auto-scroll if user was already at or near the bottom
-			if (isAtBottom) {
-				messagesDiv.scrollTop = messagesDiv.scrollHeight;
-			}
+			messagesDiv.scrollTop = messagesDiv.scrollHeight;
 		}
 
 		function createExpandableInput(toolInput, rawInput) {
 			try {
 				let html = toolInput.replace(/\\[expand\\]/g, '<span class="expand-btn" onclick="toggleExpand(this)">expand</span>');
-
+				
 				// Store raw input data for expansion
 				if (rawInput && typeof rawInput === 'object') {
 					let btnIndex = 0;
@@ -739,47 +735,45 @@ const html = `<!DOCTYPE html>
 				return; // Don't show the result message
 			}
 
-			const isAtBottom = shouldAutoScroll();
-
 			const messageDiv = document.createElement('div');
 			messageDiv.className = data.isError ? 'message error' : 'message tool-result';
-
+			
 			// Create header
 			const headerDiv = document.createElement('div');
 			headerDiv.className = 'message-header';
-
+			
 			const iconDiv = document.createElement('div');
 			iconDiv.className = data.isError ? 'message-icon error' : 'message-icon';
-			iconDiv.style.background = data.isError ?
-				'linear-gradient(135deg, #e74c3c 0%, #c0392b 100%)' :
+			iconDiv.style.background = data.isError ? 
+				'linear-gradient(135deg, #e74c3c 0%, #c0392b 100%)' : 
 				'linear-gradient(135deg, #1cc08c 0%, #16a974 100%)';
 			iconDiv.textContent = data.isError ? '❌' : '✅';
-
+			
 			const labelDiv = document.createElement('div');
 			labelDiv.className = 'message-label';
 			labelDiv.textContent = data.isError ? 'Error' : 'Result';
-
+			
 			headerDiv.appendChild(iconDiv);
 			headerDiv.appendChild(labelDiv);
 			messageDiv.appendChild(headerDiv);
-
+			
 			// Add content
 			const contentDiv = document.createElement('div');
 			contentDiv.className = 'message-content';
-
+			
 			// Check if it's a tool result and truncate appropriately
 			let content = data.content;
 			if (content.length > 200 && !data.isError) {
 				const truncateAt = 197;
 				const truncated = content.substring(0, truncateAt);
 				const resultId = 'result_' + Math.random().toString(36).substr(2, 9);
-
+				
 				const preElement = document.createElement('pre');
 				preElement.innerHTML = '<span id="' + resultId + '_visible">' + escapeHtml(truncated) + '</span>' +
 									   '<span id="' + resultId + '_ellipsis">...</span>' +
 									   '<span id="' + resultId + '_hidden" style="display: none;">' + escapeHtml(content.substring(truncateAt)) + '</span>';
 				contentDiv.appendChild(preElement);
-
+				
 				// Add expand button container
 				const expandContainer = document.createElement('div');
 				expandContainer.className = 'diff-expand-container';
@@ -794,14 +788,10 @@ const html = `<!DOCTYPE html>
 				preElement.textContent = content;
 				contentDiv.appendChild(preElement);
 			}
-
+			
 			messageDiv.appendChild(contentDiv);
 			messagesDiv.appendChild(messageDiv);
-
-			// Only auto-scroll if user was already at or near the bottom
-			if (isAtBottom) {
-				messagesDiv.scrollTop = messagesDiv.scrollHeight;
-			}
+			messagesDiv.scrollTop = messagesDiv.scrollHeight;
 		}
 
 		function formatToolInputUI(input) {
@@ -1912,28 +1902,22 @@ const html = `<!DOCTYPE html>
 		}
 
 		function showRestoreContainer(data) {
-			const isAtBottom = shouldAutoScroll();
-
 			const restoreContainer = document.createElement('div');
 			restoreContainer.className = 'restore-container';
 			restoreContainer.id = \`restore-\${data.sha}\`;
-
+			
 			const timeAgo = new Date(data.timestamp).toLocaleTimeString();
 			const shortSha = data.sha ? data.sha.substring(0, 8) : 'unknown';
-
+			
 			restoreContainer.innerHTML = \`
 				<button class="restore-btn dark" onclick="restoreToCommit('\${data.sha}')">
 					Restore checkpoint
 				</button>
 				<span class="restore-date">\${timeAgo}</span>
 			\`;
-
+			
 			messagesDiv.appendChild(restoreContainer);
-
-			// Only auto-scroll if user was already at or near the bottom
-			if (isAtBottom) {
-				messagesDiv.scrollTop = messagesDiv.scrollHeight;
-			}
+			messagesDiv.scrollTop = messagesDiv.scrollHeight;
 		}
 
 		function hideRestoreContainer(commitSha) {
@@ -1996,7 +1980,36 @@ const html = `<!DOCTYPE html>
 		}
 
 		updateStatus('Initializing...', 'disconnected');
-		
+
+		function formatUnixTimestamp(timestamp) {
+			try {
+				// Convert to number if it's a string
+				const ts = typeof timestamp === 'string' ? parseInt(timestamp) : timestamp;
+
+				// Check if it's a valid Unix timestamp (between 1970 and 2100)
+				if (ts < 0 || ts > 4102444800) return null;
+
+				// Convert to milliseconds for JavaScript Date
+				const date = new Date(ts * 1000);
+
+				// Format like Linux date command: "Wed Jun 25 11:10:23 PM MST 2025"
+				const options = {
+					weekday: 'short',
+					month: 'short',
+					day: 'numeric',
+					hour: 'numeric',
+					minute: '2-digit',
+					second: '2-digit',
+					hour12: true,
+					timeZoneName: 'short',
+					year: 'numeric'
+				};
+
+				return date.toLocaleString('en-US', options);
+			} catch (e) {
+				return null;
+			}
+		}
 
 		function parseSimpleMarkdown(markdown) {
 			const lines = markdown.split('\\n');
@@ -2006,6 +2019,14 @@ const html = `<!DOCTYPE html>
 
 			for (let line of lines) {
 				line = line.trim();
+				// Format Unix timestamps before other processing
+				line = line.replace(/\\b(\\d{10})\\b/g, (match, timestamp) => {
+					const formatted = formatUnixTimestamp(timestamp);
+					if (formatted) {
+						return \`<span class="timestamp" title="Unix timestamp: \${timestamp}">\${formatted}</span>\`;
+					}
+					return match;
+				});
 
 				// Bold
 				line = line.replace(/\\*\\*(.*?)\\*\\*/g, '<strong>$1</strong>');

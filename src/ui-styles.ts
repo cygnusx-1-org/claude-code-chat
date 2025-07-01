@@ -1748,6 +1748,6 @@ const styles = `
         color: var(--vscode-foreground);
         opacity: 0.8;
     }
-</style>`
+</style>`;
 
-export default styles
+export default styles;
