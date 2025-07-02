@@ -131,6 +131,7 @@
         {
           "id": "claude-code-chat.chat",
           "name": "Claude Code Chat",
+          "type": "webview",
           "when": "true",
           "icon": "icon.png",
           "contextualTitle": "Claude Code Chat"
