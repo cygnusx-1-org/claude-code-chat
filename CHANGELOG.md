@@ -2,7 +2,12 @@
 
 All notable changes to the "claude-code-chat" extension will be documented in this file.
 
-Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
+## [0.1.4] - 2025-07-01
+
+### Improvements
+- Fixed Convert Unix timestamp in the usage limit reached message to be human readable
+- Fixed Move Claude Code Chat to Plugin Panel in VSCode
+- Fixed Display markdown in output properly instead of raw
 
 ## [0.1.3] - 2025-06-24
 
