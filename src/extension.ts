@@ -399,13 +399,8 @@ class ClaudeChatProvider implements vscode.WebviewViewProvider {
 
 			// Clear process reference
 			this._currentClaudeProcess = undefined;
-<<<<<<< HEAD
-
-			this._panel?.webview.postMessage({
-=======
 			
 			this._view?.webview.postMessage({
->>>>>>> sidebar
 				type: 'clearLoading'
 			});
 
