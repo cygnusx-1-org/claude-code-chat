@@ -1470,7 +1470,31 @@ const styles = `
     pre {
         white-space: pre-wrap;
         word-wrap: break-word;
-        margin: 0;
+        margin: 8px 0;
+        padding: 12px;
+        background-color: var(--vscode-textCodeBlock-background);
+        border: 1px solid var(--vscode-textBlockQuote-border);
+        border-radius: 4px;
+        overflow-x: auto;
+        font-family: var(--vscode-editor-font-family);
+        font-size: var(--vscode-editor-font-size);
+    }
+
+    code {
+        font-family: var(--vscode-editor-font-family);
+        font-size: 0.9em;
+        background-color: var(--vscode-textCodeBlock-background);
+        padding: 2px 4px;
+        border-radius: 3px;
+        border: 1px solid var(--vscode-textBlockQuote-border);
+    }
+
+    pre code {
+        background-color: transparent;
+        padding: 0;
+        border: none;
+        border-radius: 0;
+        font-size: inherit;
     }
 
     .session-badge {

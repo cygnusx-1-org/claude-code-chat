@@ -462,14 +462,14 @@ class ClaudeChatProvider {
 
 		claudeProcess.on('error', (error) => {
 			console.log('Claude process error:', error.message);
-			
+
 			// Clear process reference
 			this._currentClaudeProcess = undefined;
-			
+
 			this._panel?.webview.postMessage({
 				type: 'clearLoading'
 			});
-			
+
 			// Check if claude command is not installed
 			if (error.message.includes('ENOENT') || error.message.includes('command not found')) {
 				this._sendAndSaveMessage({
@@ -703,7 +703,7 @@ class ClaudeChatProvider {
 	public newSessionOnConfigChange() {
 		// Start a new session due to configuration change
 		this._newSession();
-		
+
 		// Show notification to user
 		vscode.window.showInformationMessage(
 			'WSL configuration changed. Started a new Claude session.',
@@ -1037,9 +1037,9 @@ class ClaudeChatProvider {
 				fileList = fileList.filter(file => {
 					const fileName = file.name.toLowerCase();
 					const filePath = file.path.toLowerCase();
-					
+
 					// Check if term matches filename or any part of the path
-					return fileName.includes(term) || 
+					return fileName.includes(term) ||
 						   filePath.includes(term) ||
 						   filePath.split('/').some(segment => segment.includes(term));
 				});
@@ -1075,7 +1075,7 @@ class ClaudeChatProvider {
 					'Images': ['png', 'jpg', 'jpeg', 'gif', 'svg', 'webp', 'bmp']
 				}
 			});
-			
+
 			if (result && result.length > 0) {
 				// Send the selected file paths back to webview
 				result.forEach(uri => {
@@ -1085,7 +1085,7 @@ class ClaudeChatProvider {
 					});
 				});
 			}
-			
+
 		} catch (error) {
 			console.error('Error selecting image files:', error);
 		}
@@ -1093,13 +1093,13 @@ class ClaudeChatProvider {
 
 	private _stopClaudeProcess(): void {
 		console.log('Stop request received');
-		
+
 		if (this._currentClaudeProcess) {
 			console.log('Terminating Claude process...');
-			
+
 			// Try graceful termination first
 			this._currentClaudeProcess.kill('SIGTERM');
-			
+
 			// Force kill after 2 seconds if still running
 			setTimeout(() => {
 				if (this._currentClaudeProcess && !this._currentClaudeProcess.killed) {
@@ -1107,26 +1107,26 @@ class ClaudeChatProvider {
 					this._currentClaudeProcess.kill('SIGKILL');
 				}
 			}, 2000);
-			
+
 			// Clear process reference
 			this._currentClaudeProcess = undefined;
-			
+
 			// Update UI state
 			this._panel?.webview.postMessage({
 				type: 'setProcessing',
 				data: false
 			});
-			
+
 			this._panel?.webview.postMessage({
 				type: 'clearLoading'
 			});
-			
+
 			// Send stop confirmation message directly to UI and save
 			this._sendAndSaveMessage({
 				type: 'error',
 				data: '⏹️ Claude code was stopped.'
 			});
-			
+
 			console.log('Claude process termination initiated');
 		} else {
 			console.log('No Claude process running to stop');
@@ -1180,7 +1180,7 @@ class ClaudeChatProvider {
 		try {
 			const filePath = path.join(this._conversationsPath, filename);
 			console.log("filePath", filePath);
-			
+
 			let conversationData;
 			try {
 				const fileUri = vscode.Uri.file(filePath);
@@ -1189,7 +1189,7 @@ class ClaudeChatProvider {
 			} catch {
 				return;
 			}
-			
+
 			console.log("conversationData", conversationData);
 			// Load conversation into current state
 			this._currentConversation = conversationData.messages || [];
@@ -1255,12 +1255,12 @@ class ClaudeChatProvider {
 
 	private async _updateSettings(settings: { [key: string]: any }): Promise<void> {
 		const config = vscode.workspace.getConfiguration('claudeCodeChat');
-		
+
 		try {
 			for (const [key, value] of Object.entries(settings)) {
 				await config.update(key, value, vscode.ConfigurationTarget.Global);
 			}
-			
+
 			vscode.window.showInformationMessage('Settings updated successfully');
 		} catch (error) {
 			console.error('Failed to update settings:', error);
@@ -1286,10 +1286,10 @@ class ClaudeChatProvider {
 		if (validModels.includes(model)) {
 			this._selectedModel = model;
 			console.log('Model selected:', model);
-			
+
 			// Store the model preference in workspace state
 			this._context.workspaceState.update('claude.selectedModel', model);
-			
+
 			// Show confirmation
 			vscode.window.showInformationMessage(`Claude model switched to: ${model.charAt(0).toUpperCase() + model.slice(1)}`);
 		} else {
@@ -1307,7 +1307,7 @@ class ClaudeChatProvider {
 
 		// Build command arguments
 		const args = ['/model'];
-		
+
 		// Add session resume if we have a current session
 		if (this._currentSessionId) {
 			args.push('--resume', this._currentSessionId);
@@ -1344,7 +1344,7 @@ class ClaudeChatProvider {
 
 		// Build command arguments
 		const args = [`/${command}`];
-		
+
 		// Add session resume if we have a current session
 		if (this._currentSessionId) {
 			args.push('--resume', this._currentSessionId);
@@ -1375,7 +1375,7 @@ class ClaudeChatProvider {
 	private _sendPlatformInfo() {
 		const platform = process.platform;
 		const dismissed = this._context.globalState.get<boolean>('wslAlertDismissed', false);
-		
+
 		// Get WSL configuration
 		const config = vscode.workspace.getConfiguration('claudeCodeChat');
 		const wslEnabled = config.get<boolean>('wsl.enabled', false);
